@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>רשימת קניות - חופשה משפחתית</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            background: #f8f9ff;
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 10px;
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #4facfe;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .controls {
+            padding: 20px;
+            background: #f8f9ff;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: #4facfe;
+            box-shadow: 0 0 10px rgba(79, 172, 254, 0.3);
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            border: 2px solid #4facfe;
+            background: white;
+            color: #4facfe;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: #4facfe;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(79, 172, 254, 0.3);
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+            padding: 30px;
+        }
+
+        .category {
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .category:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+            border-color: #4facfe;
+        }
+
+        .category-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .category-header h3 {
+            font-size: 1.3em;
+            margin-bottom: 5px;
+        }
+
+        .category-progress {
+            background: rgba(255,255,255,0.3);
+            height: 6px;
+            border-radius: 3px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .category-progress-bar {
+            height: 100%;
+            background: #4facfe;
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .items-list {
+            padding: 20px;
+        }
+
+        .item {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+            transition: all 0.3s ease;
+        }
+
+        .item:last-child {
+            border-bottom: none;
+        }
+
+        .item:hover {
+            background: #f8f9ff;
+            border-radius: 8px;
+            margin: 0 -10px;
+            padding: 12px 10px;
+        }
+
+        .item.completed {
+            opacity: 0.6;
+            text-decoration: line-through;
+        }
+
+        .item-checkbox {
+            width: 20px;
+            height: 20px;
+            margin-left: 15px;
+            cursor: pointer;
+            accent-color: #4facfe;
+            transform: scale(1.2);
+        }
+
+        .item-content {
+            flex: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .item-name {
+            font-weight: 500;
+            color: #333;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .item-name:hover {
+            color: #4facfe;
+        }
+
+        .editable-item {
+            background: #fff9c4;
+            border: 1px dashed #ffd54f;
+        }
+
+        .edit-input {
+            border: none;
+            background: transparent;
+            font-size: inherit;
+            font-weight: inherit;
+            color: inherit;
+            width: 100%;
+            outline: none;
+        }
+
+        .item-quantity {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        .item-notes {
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 3px;
+            font-style: italic;
+        }
+
+        .special-dietary {
+            background: #fff3e0;
+            border: 1px solid #ffb74d;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px;
+        }
+
+        .special-dietary h4 {
+            color: #f57c00;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .special-dietary ul {
+            list-style: none;
+            color: #e65100;
+        }
+
+        .special-dietary li {
+            margin-bottom: 5px;
+            padding-right: 15px;
+            position: relative;
+        }
+
+        .special-dietary li:before {
+            content: "⚠️";
+            position: absolute;
+            right: -5px;
+        }
+
+        .progress-summary {
+            position: sticky;
+            bottom: 0;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 1.1em;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
+        }
+
+        @media (max-width: 768px) {
+            .categories-grid {
+                grid-template-columns: 1fr;
+                padding: 15px;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .search-box {
+                min-width: auto;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛒 רשימת קניות לחופשה משפחתית</h1>
+            <p>22 אנשים • רביעי-שבת • ארוחות מלאות</p>
+        </div>
+
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number" id="totalItems">0</div>
+                <div class="stat-label">סה"כ פריטים</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="completedItems">0</div>
+                <div class="stat-label">נקנו</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="remainingItems">0</div>
+                <div class="stat-label">נותרו</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="progressPercent">0%</div>
+                <div class="stat-label">הושלם</div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <input type="text" class="search-box" id="searchBox" placeholder="🔍 חפש פריט...">
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">הכל</button>
+                <button class="filter-btn" data-filter="remaining">נותרו</button>
+                <button class="filter-btn" data-filter="completed">נקנו</button>
+                <button class="filter-btn" data-filter="reset">איפוס הכל</button>
+            </div>
+        </div>
+
+        <div class="special-dietary">
+            <h4>⚠️ דרישות תזונה מיוחדות</h4>
+            <ul>
+                <li>צמחוני-טבעוני (1 אדם) - המבורגרים טבעוניים, ירקות לצלייה, טופו/סייטן</li>
+                <li>ללא גלוטן (1 אדם) - לחמניות, לחם ופיתות ללא גלוטן</li>
+            </ul>
+        </div>
+
+        <div class="categories-grid" id="categoriesGrid">
+            <!-- הקטגוריות ייווצרו ב-JavaScript -->
+        </div>
+
+        <div class="progress-summary">
+            <span id="progressText">מתחילים ברשימת הקניות! 🎯</span>
+        </div>
+    </div>
+
+    <script>
+        const shoppingData = {
+            "ירקות ופירות": [
+                { name: "מלפפונים", quantity: "15-20 יחידות", notes: "" },
+                { name: "עגבניות", quantity: "15-20 יחידות", notes: "" },
+                { name: "גמבה", quantity: "6-8 יחידות", notes: "" },
+                { name: "בצל", quantity: "5-6 יחידות", notes: "" },
+                { name: "חסה", quantity: "2-3 ראשים", notes: "" },
+                { name: "פטריות", quantity: "2-3 סלסלות", notes: "לצמחוני ולבישול" },
+                { name: "קישואים", quantity: "2-3 יחידות", notes: "לצמחוני" },
+                { name: "חצילים", quantity: "2-3 יחידות", notes: "לצמחוני" },
+                { name: "גזר", quantity: "5-6 יחידות", notes: "" },
+                { name: "פירות העונה", quantity: "1-2 יחידות גדולות מכל סוג", notes: "אבטיח/מלון/ענבים" }
+            ],
+            "בשר ועוף": [
+                { name: "המבורגרים קפואים", quantity: "27 יחידות", notes: "או בשר טחון 4 ק״ג" },
+                { name: "גוש אנטריקוט", quantity: "3 ק״ג", notes: "לברביקיו" },
+                { name: "כנפיים/שוקיים/עוף במרינדה", quantity: "1.5 ק״ג", notes: "לברביקיו" },
+                { name: "נקניקיות איכותיות", quantity: "1 ק״ג", notes: "לברביקיו" },
+                { name: "שיפודי פרגיות/שווארמה", quantity: "1 ק״ג", notes: "לברביקיו" },
+                { name: "המבורגרים טבעוניים", quantity: "1-2 יחידות", notes: "לצמחוני-טבעוני" },
+                { name: "טופו/סייטן", quantity: "1 יחידה", notes: "לצמחוני-טבעוני (לשיפודים)" }
+            ],
+            "מוצרי חלב וביצים": [
+                { name: "ביצים", quantity: "3-4 תבניות (72-96 ביצים)", notes: "" },
+                { name: "חלב", quantity: "2-3 ליטר", notes: "" },
+                { name: "גבינה לבנה/קוטג׳", quantity: "2-3 אריזות גדולות", notes: "" },
+                { name: "גבינה צהובה", quantity: "1 חבילה", notes: "" },
+                { name: "גבינה בולגרית/צפתית", quantity: "1-2 אריזות", notes: "" },
+                { name: "חמאה", quantity: "2 יחידות", notes: "" }
+            ],
+            "לחמים ומאפים": [
+                { name: "לחמניות המבורגר", quantity: "30 יחידות", notes: "" },
+                { name: "לחמניות המבורגר ללא גלוטן", quantity: "1-2 יחידות", notes: "⚠️ ללא גלוטן" },
+                { name: "לחם פרוס", quantity: "2-3 יחידות", notes: "" },
+                { name: "לחם פרוס ללא גלוטן", quantity: "1 יחידה", notes: "⚠️ ללא גלוטן" },
+                { name: "פיתות/לחמניות", quantity: "30-40 יחידות", notes: "" },
+                { name: "פיתות/לחמניות ללא גלוטן", quantity: "1 חבילה", notes: "⚠️ ללא גלוטן" },
+                { name: "פסטה יבשה", quantity: "1 ק״ג", notes: "" },
+                { name: "דפי לזניה", quantity: "1-2 אריזות", notes: "אם רלוונטי" }
+            ],
+            "מטבלים ושימורים": [
+                { name: "מלפפונים חמוצים", quantity: "1 צנצנת גדולה", notes: "" },
+                { name: "זיתים", quantity: "1 צנצנת גדולה", notes: "" },
+                { name: "טונה", quantity: "2-3 קופסאות שימורים", notes: "" },
+                { name: "חומוס מוכן", quantity: "2-3 קופסאות גדולות", notes: "" },
+                { name: "טחינה גולמית", quantity: "1 בקבוק", notes: "" },
+                { name: "שמן זית", quantity: "1 בקבוק", notes: "" },
+                { name: "תבלינים ומלח", quantity: "לפי הצורך", notes: "מלח, פלפל שחור, תבלינים" },
+                { name: "קפה, תה, סוכר", quantity: "לפי הצורך", notes: "" },
+                { name: "ריבה", quantity: "1 צנצנת", notes: "" },
+                { name: "שוקולד למריחה", quantity: "1 צנצנת", notes: "" }
+            ],
+            "רטבים וקטשופ": [
+                { name: "קטשופ", quantity: "1 בקבוק גדול", notes: "" },
+                { name: "מיונז", quantity: "1 בקבוק גדול", notes: "" },
+                { name: "חרדל", quantity: "1 צנצנת", notes: "" },
+                { name: "רוטב אלף האיים", quantity: "1 בקבוק", notes: "" },
+                { name: "רוטב שום", quantity: "1 בקבוק", notes: "" },
+                { name: "צ׳ילי מתוק", quantity: "1 בקבוק", notes: "" },
+                { name: "רסק עגבניות", quantity: "1 קטן", notes: "לפסטה" }
+            ],
+            "ציוד ומוצרי נוחות": [
+                { name: "פחמים", quantity: "1 שק גדול (5 ק״ג)", notes: "" },
+                { name: "נוזל הדלקה/קוביות הדלקה", quantity: "1 בקבוק/חבילה", notes: "" },
+                { name: "שקיות אשפה", quantity: "1 חבילה", notes: "" },
+                { name: "נייר מגבת", quantity: "1 גליל", notes: "" },
+                { name: "שקיות סנדוויץ׳/אחסון", quantity: "1 חבילה", notes: "" },
+                { name: "צ׳יפס קפוא", quantity: "2-3 שקיות גדולות (2 ק״ג)", notes: "" }
+            ],
+            "שתייה": [
+                { name: "מים מינרליים", quantity: "1 מארז גדול", notes: "" },
+                { name: "מיצים מרוכזים/מוכנים", quantity: "3-4 ליטר", notes: "" },
+                { name: "בירות", quantity: "20 בקבוקים/פחיות", notes: "5 אנשים x 4 ימים" },
+                { name: "ארגז קולה קטנות", quantity: "1 ארגז (24 פחיות)", notes: "פחיות 330 מ״ל" },
+                { name: "משקאות קלים נוספים", quantity: "לפי הצורך", notes: "ספרייט, פאנטה וכו׳" }
+            ],
+            "פריטים נוספים": [
+                { name: "פריט נוסף 1", quantity: "", notes: "לחץ כדי לערוך" },
+                { name: "פריט נוסף 2", quantity: "", notes: "לחץ כדי לערוך" },
+                { name: "פריט נוסף 3", quantity: "", notes: "לחץ כדי לערוך" }
+            ]
+        };
+
+        let completedItems = new Set();
+
+        function createCategoryElement(categoryName, items) {
+            const categoryDiv = document.createElement('div');
+            categoryDiv.className = 'category';
+            categoryDiv.setAttribute('data-category', categoryName);
+
+            const completedCount = items.filter(item => 
+                completedItems.has(`${categoryName}-${item.name}`)
+            ).length;
+            const progressPercent = (completedCount / items.length) * 100;
+
+            categoryDiv.innerHTML = `
+                <div class="category-header">
+                    <h3>${categoryName}</h3>
+                    <div style="font-size: 0.9em; opacity: 0.9;">${completedCount}/${items.length} פריטים</div>
+                    <div class="category-progress">
+                        <div class="category-progress-bar" style="width: ${progressPercent}%"></div>
+                    </div>
+                </div>
+                <div class="items-list">
+                    ${items.map(item => {
+                        const itemId = `${categoryName}-${item.name}`;
+                        const isCompleted = completedItems.has(itemId);
+                        return `
+                            <div class="item ${isCompleted ? 'completed' : ''} ${item.name.includes('פריט נוסף') ? 'editable-item' : ''}" data-item-id="${itemId}">
+                                <input type="checkbox" class="item-checkbox" ${isCompleted ? 'checked' : ''} 
+                                       onchange="toggleItem('${itemId}', this)">
+                                <div class="item-content">
+                                    <div>
+                                        <div class="item-name" onclick="editItem('${itemId}', this)" ${item.name.includes('פריט נוסף') ? 'title="לחץ לעריכה"' : ''}>${item.name}</div>
+                                        ${item.notes ? `<div class="item-notes" onclick="editNotes('${itemId}', this)" ${item.notes.includes('לחץ') ? 'title="לחץ לעריכה"' : ''}>${item.notes}</div>` : ''}
+                                    </div>
+                                    <div class="item-quantity" onclick="editQuantity('${itemId}', this)" ${!item.quantity ? 'title="לחץ לעריכה"' : ''}>${item.quantity}</div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+
+            return categoryDiv;
+        }
+
+        function renderCategories() {
+            const grid = document.getElementById('categoriesGrid');
+            grid.innerHTML = '';
+            
+            Object.entries(shoppingData).forEach(([categoryName, items]) => {
+                const categoryElement = createCategoryElement(categoryName, items);
+                grid.appendChild(categoryElement);
+            });
+        }
+
+        function toggleItem(itemId, checkbox) {
+            if (checkbox.checked) {
+                completedItems.add(itemId);
+            } else {
+                completedItems.delete(itemId);
+            }
+            
+            const itemElement = document.querySelector(`[data-item-id="${itemId}"]`);
+            itemElement.classList.toggle('completed', checkbox.checked);
+            
+            updateStats();
+            updateCategoryProgress();
+            saveProgress();
+        }
+
+        function updateStats() {
+            const totalItems = Object.values(shoppingData).reduce((sum, items) => sum + items.length, 0);
+            const completed = completedItems.size;
+            const remaining = totalItems - completed;
+            const progressPercent = Math.round((completed / totalItems) * 100);
+
+            document.getElementById('totalItems').textContent = totalItems;
+            document.getElementById('completedItems').textContent = completed;
+            document.getElementById('remainingItems').textContent = remaining;
+            document.getElementById('progressPercent').textContent = `${progressPercent}%`;
+
+            const progressText = document.getElementById('progressText');
+            if (progressPercent === 0) {
+                progressText.textContent = 'מתחילים ברשימת הקניות! 🎯';
+            } else if (progressPercent < 25) {
+                progressText.textContent = 'התחלנו חזק! כל הכבוד 💪';
+            } else if (progressPercent < 50) {
+                progressText.textContent = 'רבע הדרך מאחורינו! ממשיכים 🚀';
+            } else if (progressPercent < 75) {
+                progressText.textContent = 'חצי הדרך! אתם על המסלול הנכון 🎉';
+            } else if (progressPercent < 100) {
+                progressText.textContent = 'כמעט שם! עוד קצת ונסיים 🏁';
+            } else {
+                progressText.textContent = 'סיימתם! זמן לחופשה מהנה! 🎊🎈';
+            }
+        }
+
+        function updateCategoryProgress() {
+            Object.entries(shoppingData).forEach(([categoryName, items]) => {
+                const completedCount = items.filter(item => 
+                    completedItems.has(`${categoryName}-${item.name}`)
+                ).length;
+                const progressPercent = (completedCount / items.length) * 100;
+                
+                const category = document.querySelector(`[data-category="${categoryName}"]`);
+                if (category) {
+                    const progressBar = category.querySelector('.category-progress-bar');
+                    const statsText = category.querySelector('.category-header div');
+                    
+                    if (progressBar) progressBar.style.width = `${progressPercent}%`;
+                    if (statsText) statsText.textContent = `${completedCount}/${items.length} פריטים`;
+                }
+            });
+        }
+
+        function filterItems(filter) {
+            const categories = document.querySelectorAll('.category');
+            
+            categories.forEach(category => {
+                const items = category.querySelectorAll('.item');
+                let visibleItems = 0;
+                
+                items.forEach(item => {
+                    const isCompleted = item.classList.contains('completed');
+                    let shouldShow = true;
+                    
+                    if (filter === 'completed' && !isCompleted) shouldShow = false;
+                    if (filter === 'remaining' && isCompleted) shouldShow = false;
+                    
+                    item.style.display = shouldShow ? 'flex' : 'none';
+                    if (shouldShow) visibleItems++;
+                });
+                
+                category.style.display = visibleItems > 0 ? 'block' : 'none';
+            });
+        }
+
+        function searchItems(searchTerm) {
+            const categories = document.querySelectorAll('.category');
+            
+            categories.forEach(category => {
+                const items = category.querySelectorAll('.item');
+                let visibleItems = 0;
+                
+                items.forEach(item => {
+                    const itemName = item.querySelector('.item-name').textContent.toLowerCase();
+                    const itemNotes = item.querySelector('.item-notes')?.textContent.toLowerCase() || '';
+                    const shouldShow = itemName.includes(searchTerm.toLowerCase()) || 
+                                     itemNotes.includes(searchTerm.toLowerCase());
+                    
+                    item.style.display = shouldShow ? 'flex' : 'none';
+                    if (shouldShow) visibleItems++;
+                });
+                
+                category.style.display = visibleItems > 0 ? 'block' : 'none';
+            });
+        }
+
+        function resetAll() {
+            if (confirm('האם אתה בטוח שברצונך לאפס את כל הרשימה?')) {
+                completedItems.clear();
+                renderCategories();
+                updateStats();
+                saveProgress();
+                
+                // Reset filter
+                document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+                document.querySelector('[data-filter="all"]').classList.add('active');
+            }
+        }
+
+        function saveProgress() {
+            localStorage.setItem('shoppingProgress', JSON.stringify([...completedItems]));
+        }
+
+        function loadProgress() {
+            const saved = localStorage.getItem('shoppingProgress');
+            if (saved) {
+                completedItems = new Set(JSON.parse(saved));
+            }
+        }
+
+        function editItem(itemId, element) {
+            if (!itemId.includes('פריט נוסף')) return;
+            
+            const currentText = element.textContent;
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = currentText;
+            input.className = 'edit-input';
+            input.onblur = () => finishEdit(itemId, input, element, 'name');
+            input.onkeypress = (e) => {
+                if (e.key === 'Enter') input.blur();
+            };
+            
+            element.innerHTML = '';
+            element.appendChild(input);
+            input.focus();
+            input.select();
+        }
+
+        function editQuantity(itemId, element) {
+            if (!itemId.includes('פריט נוסף') && element.textContent.trim()) return;
+            
+            const currentText = element.textContent;
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = currentText;
+            input.className = 'edit-input';
+            input.onblur = () => finishEdit(itemId, input, element, 'quantity');
+            input.onkeypress = (e) => {
+                if (e.key === 'Enter') input.blur();
+            };
+            
+            element.innerHTML = '';
+            element.appendChild(input);
+            input.focus();
+            input.select();
+        }
+
+        function editNotes(itemId, element) {
+            if (!itemId.includes('פריט נוסף') && !element.textContent.includes('לחץ')) return;
+            
+            const currentText = element.textContent;
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = currentText.includes('לחץ') ? '' : currentText;
+            input.className = 'edit-input';
+            input.onblur = () => finishEdit(itemId, input, element, 'notes');
+            input.onkeypress = (e) => {
+                if (e.key === 'Enter') input.blur();
+            };
+            
+            element.innerHTML = '';
+            element.appendChild(input);
+            input.focus();
+            input.select();
+        }
+
+        function finishEdit(itemId, input, element, field) {
+            const newValue = input.value.trim() || (field === 'name' ? 'פריט חדש' : '');
+            element.textContent = newValue;
+            
+            // Update the data structure
+            const [categoryName, itemName] = itemId.split('-', 2);
+            const items = shoppingData[categoryName];
+            const itemIndex = items.findIndex(item => `${categoryName}-${item.name}` === itemId);
+            
+            if (itemIndex !== -1) {
+                if (field === 'name') {
+                    // Update the item ID in completed items if it was checked
+                    if (completedItems.has(itemId)) {
+                        completedItems.delete(itemId);
+                        const newItemId = `${categoryName}-${newValue}`;
+                        completedItems.add(newItemId);
+                    }
+                    items[itemIndex].name = newValue;
+                    // Update the item's data-item-id
+                    const itemElement = element.closest('.item');
+                    itemElement.setAttribute('data-item-id', `${categoryName}-${newValue}`);
+                } else if (field === 'quantity') {
+                    items[itemIndex].quantity = newValue;
+                } else if (field === 'notes') {
+                    items[itemIndex].notes = newValue;
+                }
+            }
+            
+            saveProgress();
+        }
+
+        // Event listeners
+        document.getElementById('searchBox').addEventListener('input', (e) => {
+            searchItems(e.target.value);
+        });
+
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (btn.dataset.filter === 'reset') {
+                    resetAll();
+                    return;
+                }
+                
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                filterItems(btn.dataset.filter);
+            });
+        });
+
+        // Add global functions
+        window.toggleItem = toggleItem;
+        window.editItem = editItem;
+        window.editQuantity = editQuantity;
+        window.editNotes = editNotes;
+
+        // Initialize
+        loadProgress();
+        renderCategories();
+        updateStats();
+    </script>
+</body>
+</html>
