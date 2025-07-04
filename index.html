@@ -250,6 +250,56 @@
             font-weight: 500;
         }
 
+        .item-cost {
+            background: #e8f5e8;
+            color: #2e7d32;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: 500;
+            margin-right: 8px;
+            min-width: 60px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .item-cost:hover {
+            background: #c8e6c9;
+            border-color: #4caf50;
+            transform: scale(1.05);
+            box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+        }
+
+        .item-cost:active {
+            transform: scale(0.95);
+        }
+
+        .cost-input {
+            border: 1px solid #4facfe;
+            background: white;
+            font-size: inherit;
+            font-weight: inherit;
+            color: inherit;
+            width: 60px;
+            text-align: center;
+            outline: none;
+            border-radius: 8px;
+            padding: 2px 4px;
+        }
+
+        .total-cost {
+            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-top: 10px;
+            border-radius: 10px;
+        }
+
         .item-notes {
             font-size: 0.85em;
             color: #666;
@@ -373,6 +423,9 @@
                 <li>צמחוני-טבעוני (1 אדם) - המבורגרים טבעוניים, ירקות לצלייה, טופו/סייטן</li>
                 <li>ללא גלוטן (1 אדם) - לחמניות, לחם ופיתות ללא גלוטן</li>
             </ul>
+            <div style="margin-top: 15px; padding: 10px; background: #e3f2fd; border-radius: 8px; font-size: 0.9em;">
+                <strong>💡 טיפ:</strong> לחץ על המחיר הירוק (₪0) ליד כל פריט כדי להוסיף עלות ולעקוב אחר התקציב!
+            </div>
         </div>
 
         <div class="categories-grid" id="categoriesGrid">
@@ -387,84 +440,84 @@
     <script>
         const shoppingData = {
             "ירקות ופירות": [
-                { name: "מלפפונים", quantity: "15-20 יחידות", notes: "" },
-                { name: "עגבניות", quantity: "15-20 יחידות", notes: "" },
-                { name: "גמבה", quantity: "6-8 יחידות", notes: "" },
-                { name: "בצל", quantity: "5-6 יחידות", notes: "" },
-                { name: "חסה", quantity: "2-3 ראשים", notes: "" },
-                { name: "פטריות", quantity: "2-3 סלסלות", notes: "לצמחוני ולבישול" },
-                { name: "קישואים", quantity: "2-3 יחידות", notes: "לצמחוני" },
-                { name: "חצילים", quantity: "2-3 יחידות", notes: "לצמחוני" },
-                { name: "גזר", quantity: "5-6 יחידות", notes: "" },
-                { name: "פירות העונה", quantity: "1-2 יחידות גדולות מכל סוג", notes: "אבטיח/מלון/ענבים" }
+                { name: "מלפפונים", quantity: "15-20 יחידות", notes: "", cost: 0 },
+                { name: "עגבניות", quantity: "15-20 יחידות", notes: "", cost: 0 },
+                { name: "גמבה", quantity: "6-8 יחידות", notes: "", cost: 0 },
+                { name: "בצל", quantity: "5-6 יחידות", notes: "", cost: 0 },
+                { name: "חסה", quantity: "1 ראש", notes: "", cost: 0 },
+                { name: "פטריות", quantity: "2-3 סלסלות", notes: "לצמחוני ולבישול", cost: 0 },
+                { name: "קישואים", quantity: "2-3 יחידות", notes: "לצמחוני", cost: 0 },
+                { name: "חצילים", quantity: "2-3 יחידות", notes: "לצמחוני", cost: 0 },
+                { name: "גזר", quantity: "5-6 יחידות", notes: "", cost: 0 },
+                { name: "פירות העונה", quantity: "1-2 יחידות גדולות מכל סוג", notes: "אבטיח/מלון/ענבים", cost: 0 }
             ],
             "בשר ועוף": [
-                { name: "המבורגרים קפואים", quantity: "26 יחידות", notes: "או בשר טחון 3.9 ק״ג" },
-                { name: "גוש אנטריקוט", quantity: "3 ק״ג", notes: "לברביקיו" },
-                { name: "כנפיים/שוקיים/עוף במרינדה", quantity: "1.5 ק״ג", notes: "לברביקיו" },
-                { name: "נקניקיות איכותיות", quantity: "1 ק״ג", notes: "לברביקיו" },
-                { name: "שיפודי פרגיות/שווארמה", quantity: "1 ק״ג", notes: "לברביקיו" },
-                { name: "המבורגרים טבעוניים", quantity: "1-2 יחידות", notes: "לצמחוני-טבעוני" },
-                { name: "טופו/סייטן", quantity: "1 יחידה", notes: "לצמחוני-טבעוני (לשיפודים)" }
+                { name: "המבורגרים קפואים", quantity: "26 יחידות", notes: "או בשר טחון 3.9 ק״ג", cost: 0 },
+                { name: "גוש אנטריקוט", quantity: "3 ק״ג", notes: "לברביקיו", cost: 0 },
+                { name: "כנפיים/שוקיים/עוף במרינדה", quantity: "1.5 ק״ג", notes: "לברביקיו", cost: 0 },
+                { name: "נקניקיות איכותיות", quantity: "1 ק״ג", notes: "לברביקיו", cost: 0 },
+                { name: "שיפודי פרגיות/שווארמה", quantity: "1 ק״ג", notes: "לברביקיו", cost: 0 },
+                { name: "המבורגרים טבעוניים", quantity: "1-2 יחידות", notes: "לצמחוני-טבעוני", cost: 0 },
+                { name: "טופו/סייטן", quantity: "1 יחידה", notes: "לצמחוני-טבעוני (לשיפודים)", cost: 0 }
             ],
             "מוצרי חלב וביצים": [
-                { name: "ביצים", quantity: "3-4 תבניות (63-84 ביצים)", notes: "" },
-                { name: "חלב", quantity: "2-3 ליטר", notes: "" },
-                { name: "גבינה לבנה/קוטג׳", quantity: "2-3 אריזות גדולות", notes: "" },
-                { name: "גבינה צהובה", quantity: "1 חבילה", notes: "" },
-                { name: "גבינה בולגרית/צפתית", quantity: "1-2 אריזות", notes: "" },
-                { name: "חמאה", quantity: "2 יחידות", notes: "" }
+                { name: "ביצים", quantity: "3-4 תבניות (63-84 ביצים)", notes: "", cost: 0 },
+                { name: "חלב", quantity: "9 קרטונים", notes: "", cost: 0 },
+                { name: "קוטג׳", quantity: "6 יחידות", notes: "", cost: 0 },
+                { name: "גבינה לבנה", quantity: "2 יחידות", notes: "", cost: 0 },
+                { name: "גבינה צהובה", quantity: "600 גרם", notes: "", cost: 0 },
+                { name: "חמאה", quantity: "1 יחידה", notes: "", cost: 0 },
+                { name: "גבינת שמנת", quantity: "2 יחידות", notes: "", cost: 0 }
             ],
             "לחמים ומאפים": [
-                { name: "לחמניות המבורגר", quantity: "28-30 יחידות", notes: "" },
-                { name: "לחמניות המבורגר ללא גלוטן", quantity: "1-2 יחידות", notes: "⚠️ ללא גלוטן" },
-                { name: "לחם פרוס", quantity: "2-3 יחידות", notes: "" },
-                { name: "לחם פרוס ללא גלוטן", quantity: "1 יחידה", notes: "⚠️ ללא גלוטן" },
-                { name: "פיתות/לחמניות", quantity: "28-35 יחידות", notes: "" },
-                { name: "פיתות/לחמניות ללא גלוטן", quantity: "1 חבילה", notes: "⚠️ ללא גלוטן" },
-                { name: "פסטה יבשה", quantity: "1 ק״ג", notes: "" },
-                { name: "דפי לזניה", quantity: "1-2 אריזות", notes: "אם רלוונטי" }
+                { name: "לחמניות המבורגר", quantity: "28-30 יחידות", notes: "", cost: 0 },
+                { name: "לחמניות המבורגר ללא גלוטן", quantity: "1-2 יחידות", notes: "⚠️ ללא גלוטן", cost: 0 },
+                { name: "לחם פרוס", quantity: "2-3 יחידות", notes: "", cost: 0 },
+                { name: "לחם פרוס ללא גלוטן", quantity: "1 יחידה", notes: "⚠️ ללא גלוטן", cost: 0 },
+                { name: "פיתות/לחמניות", quantity: "28-35 יחידות", notes: "", cost: 0 },
+                { name: "פיתות/לחמניות ללא גלוטן", quantity: "1 חבילה", notes: "⚠️ ללא גלוטן", cost: 0 },
+                { name: "פסטה יבשה", quantity: "1 ק״ג", notes: "", cost: 0 }
             ],
             "מטבלים ושימורים": [
-                { name: "מלפפונים חמוצים", quantity: "1 צנצנת גדולה", notes: "" },
-                { name: "זיתים", quantity: "1 צנצנת גדולה", notes: "" },
-                { name: "טונה", quantity: "2-3 קופסאות שימורים", notes: "" },
-                { name: "חומוס מוכן", quantity: "2-3 קופסאות גדולות", notes: "" },
-                { name: "טחינה גולמית", quantity: "1 בקבוק", notes: "" },
-                { name: "שמן זית", quantity: "1 בקבוק", notes: "" },
-                { name: "תבלינים ומלח", quantity: "לפי הצורך", notes: "מלח, פלפל שחור, תבלינים" },
-                { name: "קפה, תה, סוכר", quantity: "לפי הצורך", notes: "" },
-                { name: "ריבה", quantity: "1 צנצנת", notes: "" },
-                { name: "שוקולד למריחה", quantity: "1 צנצנת", notes: "" }
+                { name: "מלפפונים חמוצים", quantity: "1 צנצנת גדולה", notes: "", cost: 0 },
+                { name: "זיתים", quantity: "1 צנצנת גדולה", notes: "", cost: 0 },
+                { name: "טונה", quantity: "8 קופסאות שימורים", notes: "", cost: 0 },
+                { name: "עגבניות בקופסא", quantity: "1 שלישיה", notes: "", cost: 0 },
+                { name: "חומוס מוכן", quantity: "1 ק״ג", notes: "", cost: 0 },
+                { name: "טחינה גולמית", quantity: "1 בקבוק", notes: "", cost: 0 },
+                { name: "שמן זית", quantity: "1 בקבוק", notes: "", cost: 0 },
+                { name: "תבלינים ומלח", quantity: "לפי הצורך", notes: "מלח, פלפל שחור, תבלינים", cost: 0 },
+                { name: "קפה, תה, סוכר", quantity: "לפי הצורך", notes: "", cost: 0 },
+                { name: "ריבה", quantity: "1 צנצנת", notes: "", cost: 0 },
+                { name: "שוקולד למריחה", quantity: "1 צנצנת", notes: "", cost: 0 }
             ],
             "רטבים וקטשופ": [
-                { name: "קטשופ", quantity: "1 בקבוק גדול", notes: "" },
-                { name: "מיונז", quantity: "1 בקבוק גדול", notes: "" },
-                { name: "חרדל", quantity: "1 צנצנת", notes: "" },
-                { name: "רוטב אלף האיים", quantity: "1 בקבוק", notes: "" },
-                { name: "רוטב שום", quantity: "1 בקבוק", notes: "" },
-                { name: "צ׳ילי מתוק", quantity: "1 בקבוק", notes: "" },
-                { name: "רסק עגבניות", quantity: "1 קטן", notes: "לפסטה" }
+                { name: "קטשופ", quantity: "2 בקבוקים גדולים", notes: "", cost: 0 },
+                { name: "מיונז", quantity: "2 בקבוקים גדולים", notes: "", cost: 0 },
+                { name: "חרדל", quantity: "1 צנצנת", notes: "", cost: 0 },
+                { name: "רסק עגבניות", quantity: "1 קטן", notes: "לפסטה", cost: 0 }
             ],
             "ציוד ומוצרי נוחות": [
-                { name: "פחמים", quantity: "1 שק גדול (5 ק״ג)", notes: "" },
-                { name: "נוזל הדלקה/קוביות הדלקה", quantity: "1 בקבוק/חבילה", notes: "" },
-                { name: "שקיות אשפה", quantity: "1 חבילה", notes: "" },
-                { name: "נייר מגבת", quantity: "1 גליל", notes: "" },
-                { name: "שקיות סנדוויץ׳/אחסון", quantity: "1 חבילה", notes: "" },
-                { name: "צ׳יפס קפוא", quantity: "2-3 שקיות גדולות (2 ק״ג)", notes: "" }
+                { name: "פחמים", quantity: "1 שק גדול (5 ק״ג)", notes: "", cost: 0 },
+                { name: "שקיות אשפה", quantity: "1 חבילה", notes: "", cost: 0 },
+                { name: "נייר מגבת", quantity: "1 גליל", notes: "", cost: 0 },
+                { name: "צ׳יפס קפוא", quantity: "5 שקיות", notes: "", cost: 0 }
             ],
             "שתייה": [
-                { name: "מים מינרליים", quantity: "1 מארז גדול", notes: "" },
-                { name: "מיצים מרוכזים/מוכנים", quantity: "3-4 ליטר", notes: "" },
-                { name: "בירות", quantity: "20 בקבוקים/פחיות", notes: "5 אנשים x 4 ימים" },
-                { name: "ארגז קולה קטנות", quantity: "1 ארגז (24 פחיות)", notes: "פחיות 330 מ״ל" },
-                { name: "משקאות קלים נוספים", quantity: "לפי הצורך", notes: "ספרייט, פאנטה וכו׳" }
+                { name: "מיצים מרוכזים/מוכנים", quantity: "3-4 ליטר", notes: "", cost: 0 },
+                { name: "בירות", quantity: "20 בקבוקים/פחיות", notes: "5 אנשים x 4 ימים", cost: 0 },
+                { name: "ארגז קולה קטנות", quantity: "1 ארגז (24 פחיות)", notes: "פחיות 330 מ״ל", cost: 0 },
+                { name: "משקאות קלים נוספים", quantity: "לפי הצורך", notes: "ספרייט, פאנטה וכו׳", cost: 0 },
+                { name: "עארק", quantity: "1 בקבוק", notes: "", cost: 0 },
+                { name: "ג׳ין", quantity: "1 בקבוק", notes: "", cost: 0 },
+                { name: "מיץ לימונדה", quantity: "1 ליטר", notes: "", cost: 0 },
+                { name: "מיץ פטל", quantity: "1 ליטר", notes: "", cost: 0 },
+                { name: "קרח", quantity: "2 שקיות", notes: "", cost: 0 }
             ],
             "פריטים נוספים": [
-                { name: "פריט נוסף 1", quantity: "", notes: "לחץ כדי לערוך" },
-                { name: "פריט נוסף 2", quantity: "", notes: "לחץ כדי לערוך" },
-                { name: "פריט נוסף 3", quantity: "", notes: "לחץ כדי לערוך" }
+                { name: "פריט נוסף 1", quantity: "", notes: "לחץ כדי לערוך", cost: 0 },
+                { name: "פריט נוסף 2", quantity: "", notes: "לחץ כדי לערוך", cost: 0 },
+                { name: "פריט נוסף 3", quantity: "", notes: "לחץ כדי לערוך", cost: 0 }
             ]
         };
 
@@ -501,7 +554,10 @@
                                         <div class="item-name" onclick="editItem('${itemId}', this)" ${item.name.includes('פריט נוסף') ? 'title="לחץ לעריכה"' : ''}>${item.name}</div>
                                         ${item.notes ? `<div class="item-notes" onclick="editNotes('${itemId}', this)" ${item.notes.includes('לחץ') ? 'title="לחץ לעריכה"' : ''}>${item.notes}</div>` : ''}
                                     </div>
-                                    <div class="item-quantity" onclick="editQuantity('${itemId}', this)" ${!item.quantity ? 'title="לחץ לעריכה"' : ''}>${item.quantity}</div>
+                                    <div style="display: flex; align-items: center;">
+                                        <div class="item-cost" onclick="editCost('${itemId}', this)" title="💰 לחץ כאן לעריכת מחיר">₪${item.cost || 0}</div>
+                                        <div class="item-quantity" onclick="editQuantity('${itemId}', this)" ${!item.quantity ? 'title="לחץ לעריכה"' : ''}>${item.quantity}</div>
+                                    </div>
                                 </div>
                             </div>
                         `;
@@ -580,6 +636,25 @@
                     if (statsText) statsText.textContent = `${completedCount}/${items.length} פריטים`;
                 }
             });
+            updateTotalCost();
+        }
+
+        function updateTotalCost() {
+            let totalCost = 0;
+            Object.values(shoppingData).forEach(items => {
+                items.forEach(item => {
+                    totalCost += item.cost || 0;
+                });
+            });
+            
+            let totalCostElement = document.getElementById('totalCostDisplay');
+            if (!totalCostElement) {
+                totalCostElement = document.createElement('div');
+                totalCostElement.id = 'totalCostDisplay';
+                totalCostElement.className = 'total-cost';
+                document.querySelector('.progress-summary').appendChild(totalCostElement);
+            }
+            totalCostElement.textContent = `סה"כ עלות משוערת: ₪${totalCost}`;
         }
 
         function filterItems(filter) {
@@ -640,12 +715,28 @@
 
         function saveProgress() {
             localStorage.setItem('shoppingProgress', JSON.stringify([...completedItems]));
+            localStorage.setItem('shoppingData', JSON.stringify(shoppingData));
         }
 
         function loadProgress() {
             const saved = localStorage.getItem('shoppingProgress');
             if (saved) {
                 completedItems = new Set(JSON.parse(saved));
+            }
+            
+            const savedData = localStorage.getItem('shoppingData');
+            if (savedData) {
+                const loadedData = JSON.parse(savedData);
+                // Merge saved costs with current data
+                Object.keys(shoppingData).forEach(categoryName => {
+                    if (loadedData[categoryName]) {
+                        shoppingData[categoryName].forEach((item, index) => {
+                            if (loadedData[categoryName][index] && loadedData[categoryName][index].cost !== undefined) {
+                                item.cost = loadedData[categoryName][index].cost;
+                            }
+                        });
+                    }
+                });
             }
         }
 
@@ -706,9 +797,32 @@
             input.select();
         }
 
+        function editCost(itemId, element) {
+            const currentCost = element.textContent.replace('₪', '');
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.value = currentCost;
+            input.className = 'cost-input';
+            input.onblur = () => finishEdit(itemId, input, element, 'cost');
+            input.onkeypress = (e) => {
+                if (e.key === 'Enter') input.blur();
+            };
+            
+            element.innerHTML = '';
+            element.appendChild(input);
+            input.focus();
+            input.select();
+        }
+
         function finishEdit(itemId, input, element, field) {
-            const newValue = input.value.trim() || (field === 'name' ? 'פריט חדש' : '');
-            element.textContent = newValue;
+            let newValue;
+            if (field === 'cost') {
+                newValue = parseFloat(input.value) || 0;
+                element.textContent = `₪${newValue}`;
+            } else {
+                newValue = input.value.trim() || (field === 'name' ? 'פריט חדש' : '');
+                element.textContent = newValue;
+            }
             
             // Update the data structure
             const [categoryName, itemName] = itemId.split('-', 2);
@@ -731,6 +845,9 @@
                     items[itemIndex].quantity = newValue;
                 } else if (field === 'notes') {
                     items[itemIndex].notes = newValue;
+                } else if (field === 'cost') {
+                    items[itemIndex].cost = newValue;
+                    updateTotalCost();
                 }
             }
             
@@ -760,11 +877,13 @@
         window.editItem = editItem;
         window.editQuantity = editQuantity;
         window.editNotes = editNotes;
+        window.editCost = editCost;
 
         // Initialize
         loadProgress();
         renderCategories();
         updateStats();
+        updateTotalCost();
     </script>
 </body>
 </html>
